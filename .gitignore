@@ -1,1 +1,10 @@
 /Manifest.toml
+HGS-CVRP-*
+hgs_cvrp.*
+hgs_win.*
+deps/win/
+build.log
+deps.jl
+genvrp*
+*.sol
+*.csv
