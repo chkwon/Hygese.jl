@@ -1,6 +1,6 @@
 
 
-const version = "9cd2c23d85f076fef9635af44e42a1dc217895ed"
+const version = "master"
 const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/$(version).tar.gz"
 
 const HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
