@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/chkwon/Hygese.jl/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/Hygese.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/chkwon/Hygese.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/Hygese.jl)
 
+**A solver for the Capacitated Vehicle Routing Problem (CVRP)**
 
 This package provides a simple Julia wrapper for the [HGS-CVRP](https://github.com/vidalt/HGS-CVRP) solver through [its C interface](https://github.com/chkwon/HGS-CVRP).
 
@@ -154,4 +155,4 @@ end
 - [Concorde.jl](https://github.com/chkwon/Concorde.jl)
 
 
-- [pyhgscvrp](https://github.com/chkwon/pyhgscvrp): A Python wrapper for HGS-CVRP
+- [hygese](https://github.com/chkwon/hygese): A Python wrapper for HGS-CVRP
