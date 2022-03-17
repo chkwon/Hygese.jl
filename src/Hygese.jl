@@ -1,5 +1,14 @@
 module Hygese
 
-# Write your package code here.
+    include("main.jl")
+
+    export  solve_cvrp, solve_tsp,
+            LIBHGSCVRP, reporting,
+            AlgorithmParameters
+            
+
+
+
+
 
 end
