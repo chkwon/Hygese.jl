@@ -24,7 +24,7 @@ function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number
 end
 
 function solve_cvrp(cvrp_file_path::AbstractString, parameters=AlgorithmParameters(); maximum_number_of_vehicles=typemax(Cint), verbose=true)
-    cvrp = CVRPLIB.readCVRPpath(cvrp_file_path)
+    cvrp = CVRPLIB.readCVRP(cvrp_file_path)
     return solve_cvrp(cvrp, parameters; maximum_number_of_vehicles=maximum_number_of_vehicles, verbose=verbose, use_dist_mtx=true)
 end
 
