@@ -3,6 +3,8 @@
 [![Build Status](https://github.com/chkwon/Hygese.jl/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/Hygese.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/chkwon/Hygese.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/Hygese.jl)
 
+*This package is under active development. It can introduce breaking changes anytime. Please use it at your own risk.*
+
 **A solver for the Capacitated Vehicle Routing Problem (CVRP)**
 
 This package provides a simple Julia wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP) through [a C interface](https://github.com/chkwon/HGS-CVRP).
