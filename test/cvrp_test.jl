@@ -1,20 +1,20 @@
 
 @testset "P-n19-k2 by coordinates" begin
-    cvrp, _, _ = CVRPLIB.readCVRP("P-n19-k2")
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("P-n19-k2")
     ap = AlgorithmParameters(timeLimit=1.8)
     result = solve_cvrp(cvrp, ap; verbose=true)
     @test result.cost <= 212 * 1.01
 end
 
 @testset "P-n19-k2 by dist_mtx with coordinates" begin
-    cvrp, _, _ = CVRPLIB.readCVRP("P-n19-k2")
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("P-n19-k2")
     ap = AlgorithmParameters(timeLimit=2.1)
     result = solve_cvrp(cvrp, ap; verbose=true, use_dist_mtx=true)
     @test result.cost <= 212 * 1.01
 end
 
 @testset "P-n19-k2 by dist_mtx without coordinates" begin
-    cvrp, _, _ = CVRPLIB.readCVRP("P-n19-k2")
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("P-n19-k2")
     cvrp.coordinates = zeros(size(cvrp.coordinates))
     ap = AlgorithmParameters(timeLimit=1.23)
     result = solve_cvrp(cvrp, ap; verbose=true, use_dist_mtx=true)
@@ -22,7 +22,7 @@ end
 end
 
 @testset "X-n101-k25" begin
-    cvrp, _, _ = CVRPLIB.readCVRP("X-n101-k25")
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("X-n101-k25")
 
     ap = AlgorithmParameters(timeLimit=3)
     result = solve_cvrp(cvrp, ap; verbose=true)
@@ -41,7 +41,7 @@ end
 
 
 @testset "A-n32-k5.vrp file read" begin
-    cvrp = CVRPLIB.readCVRPpath("A-n32-k5.vrp")
+    cvrp = CVRPLIB.readCVRP("A-n32-k5.vrp")
     ap = AlgorithmParameters(timeLimit=2.3)
     result = solve_cvrp(cvrp, ap; verbose=true)
     @test result.cost <= 784 * 1.01
@@ -51,12 +51,12 @@ end
 end
 
 @testset "x, y, dist_mtx CVRP" begin
-    cvrp, _, _ = CVRPLIB.readCVRP("A-n32-k5")
-    x = cvrp.coordinates[:, 1][1:end-1]
-    y = cvrp.coordinates[:, 2][1:end-1]
-    dist_mtx = cvrp.weights[1:end-1, 1:end-1]
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("A-n32-k5")
+    x = cvrp.coordinates[:, 1]
+    y = cvrp.coordinates[:, 2]
+    dist_mtx = cvrp.weights
     service_time = zeros(cvrp.dimension)
-    demand = cvrp.demand[1:end-1]
+    demand = cvrp.demand
     capacity = cvrp.capacity
     n_vehicles = 5
 
