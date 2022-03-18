@@ -9,6 +9,7 @@ CVRPLIB = "6232a4dd-6c48-4603-a2a7-0046d401e3d1"
 TSPLIB = "b1c258e7-59ae-4b06-a547-f10871db1548"
 
 [compat]
+CVRPLIB = "0.1"
 BinDeps = "1"
 TSPLIB = "0.1"
 julia = "1"
