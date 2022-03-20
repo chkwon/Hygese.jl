@@ -30,7 +30,6 @@ end
 
 function solve_cvrp(x::Vector, y::Vector, service_time::Vector, demand::Vector, vehicle_capacity::Integer, n_vehicles::Integer, parameters=AlgorithmParameters(); verbose=true)
     @assert length(x) == length(y) == length(service_time) == length(demand)
-    @show x, y, service_time, demand
     return c_api_solve_cvrp(length(x), x, y, service_time, demand, vehicle_capacity, n_vehicles, parameters, verbose)
 end
 
