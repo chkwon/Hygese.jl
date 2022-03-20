@@ -56,3 +56,25 @@ function solve_tsp(x::Vector, y:: Vector, parameters=AlgorithmParameters(); verb
     
     return c_api_solve_cvrp(n, x, y, serv_time, dem, vehicleCapacity, maximum_number_of_vehicles, parameters, verbose)
 end
+
+
+
+function solve_tsp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
+
+    use_dist_mtx = haskey(data, "distance_matrix")
+    has_coordinates = haskey(data, "x_coordinates") && haskey(data, "y_coordinates")
+
+    if !use_dist_mtx && !has_coordinates 
+        error("Insufficient data input. Either coordinates or a distance matrix must be provided.")
+    end
+
+    n = use_dist_mtx ? size(data["distance_matrix"], 1) : length(data["x_coordinates"])
+    demands = ones(n)
+    demands[1] = 0 
+    data["demands"] = demands
+    data["num_vehicles"] = 1
+    data["vehicle_capacity"] = n 
+    return solve_cvrp(data, parameters; verbose=verbose)
+end
+
+

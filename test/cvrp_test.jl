@@ -68,3 +68,39 @@ end
 
     @test result1.cost == result2.cost == result3.cost
 end
+
+
+@testset "dictionary CVRP" begin
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("A-n32-k5")
+    x = cvrp.coordinates[:, 1]
+    y = cvrp.coordinates[:, 2]
+    dist_mtx = cvrp.weights
+    service_time = zeros(cvrp.dimension)
+    demand = cvrp.demand
+    capacity = cvrp.capacity
+    n_vehicles = 5
+
+    data = Dict()
+    data["distance_matrix"] = dist_mtx 
+    data["demands"] = demand
+    data["vehicle_capacity"] = capacity
+    data["num_vehicles"] = n_vehicles
+
+    ap = AlgorithmParameters(timeLimit=1.8)
+
+    result1 = solve_cvrp(data, ap; verbose=false)
+
+    data["service_times"] = service_time 
+    result2 = solve_cvrp(data, ap; verbose=false)
+
+    data["x_coordinates"] = x 
+    data["y_coordinates"] = y
+    result3 = solve_cvrp(data, ap; verbose=false)
+
+    delete!(data, "distance_matrix")
+    result4 = solve_cvrp(data, ap; verbose=false)
+
+    result5 = solve_cvrp(data; verbose=false)
+
+    @test result1.cost == result2.cost == result3.cost == result4.cost == result5.cost
+end

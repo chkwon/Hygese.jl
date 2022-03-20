@@ -109,6 +109,23 @@ ap = AlgorithmParameters(timeLimit=3.2) # seconds
 result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles, ap; x_coords=x, y_coords=y, verbose=true)
 ```
 
+This package also supports a dictionary input as in Google OR-Tools:
+```julia
+data = Dict()
+data["distance_matrix"] = ... # Matrix
+data["demands"] = ... # Vector
+data["service_times"] ... # Vector
+data["vehicle_capacity"] = ... # Integer
+data["num_vehicles"] = ... # Integer
+data["x_coordinaes"] = ... # Vector
+data["y_coordinaes"] = ... # Vector
+
+ap = AlgorithmParameters(timeLimit=3.2) # seconds
+result = solve_cvrp(data, ap; verbose=true)
+```
+Again, you can omit either the distance matrix or the coordinates.
+
+
 ## TSP interfaces 
 
 As TSP is a special case of CVRP, the same solver can be used for solving TSP. 
@@ -128,6 +145,21 @@ result1 = solve_tsp(x, y, ap)
 result2 = solve_tsp(dist_mtx, ap)
 result3 = solve_tsp(dist_mtx, ap; x_coords=x, y_coords=y)
 ```
+
+- The dictionary input:
+```julia
+This package also supports a dictionary input as in Google OR-Tools:
+```julia
+data = Dict()
+data["distance_matrix"] = ... # Matrix
+data["x_coordinaes"] = ... # Vector
+data["y_coordinaes"] = ... # Vector
+
+ap = AlgorithmParameters(timeLimit=3.2) # seconds
+result = solve_tsp(data, ap; verbose=true)
+```
+You can omit either the distance matrix or the coordinates.
+
 
 ## AlgorithmParamters
 

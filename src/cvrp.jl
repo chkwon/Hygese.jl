@@ -42,3 +42,62 @@ function solve_cvrp(
 end
 
 
+# const CVRP_KEYS = Dict(
+#     "distance_matrix" => Matrix{Real},
+#     "num_vehicles" => Integer,
+#     "demands" => Vector{Real},
+#     "vehicle_capacity" => Integer,
+#     "service_times" => Vector{Real},
+#     "x_coordinates" => Vector{Real},
+#     "y_coordinates" => Vector{Real}
+# )
+
+function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
+    use_dist_mtx = haskey(data, "distance_matrix")
+    has_coordinates = haskey(data, "x_coordinates") && haskey(data, "y_coordinates")
+
+    if !use_dist_mtx && !has_coordinates 
+        error("Insufficient data input. Either coordinates or a distance matrix must be provided.")
+    end
+
+    n = use_dist_mtx ? size(data["distance_matrix"], 1) : length(data["x_coordinates"])
+    service_time = get(data, "service_times", zeros(n)) 
+
+    if !use_dist_mtx
+        return solve_cvrp(
+            data["x_coordinates"] :: Vector, 
+            data["y_coordinates"] :: Vector, 
+            service_time :: Vector,
+            data["demands"] :: Vector, 
+            data["vehicle_capacity"] :: Integer, 
+            data["num_vehicles"] :: Integer, 
+            parameters; 
+            verbose=verbose
+        )
+    else 
+        if has_coordinates 
+            return solve_cvrp(
+                data["distance_matrix"] :: Matrix, 
+                service_time :: Vector,
+                data["demands"] :: Vector, 
+                data["vehicle_capacity"] :: Integer, 
+                data["num_vehicles"] :: Integer, 
+                parameters; 
+                verbose=verbose,
+                x_coords = data["x_coordinates"],
+                y_coords = data["y_coordinates"]
+            )
+    
+        else
+            return solve_cvrp(
+                data["distance_matrix"] :: Matrix, 
+                service_time :: Vector,
+                data["demands"] :: Vector, 
+                data["vehicle_capacity"] :: Integer, 
+                data["num_vehicles"] :: Integer, 
+                parameters; 
+                verbose=verbose
+            )
+        end    
+    end
+end
