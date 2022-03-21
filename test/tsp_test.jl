@@ -40,7 +40,42 @@ end
     ap = AlgorithmParameters(timeLimit=1)
     result1 = solve_tsp(x, y, ap)
     result2 = solve_tsp(dist_mtx, ap)
-    result3 = solve_tsp(dist_mtx, ap; x_coords=x, y_coords=y)
+    result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 
     @test result1.cost == result2.cost == result3.cost
+end
+
+
+
+@testset "dictionary TSP" begin
+    tsp = TSPLIB.readTSPLIB(:pr76)
+    dist_mtx = tsp.weights
+    x = tsp.nodes[:, 1]
+    y = tsp.nodes[:, 2]
+
+    data = Dict()
+    data["distance_matrix"] = dist_mtx 
+
+    ap = AlgorithmParameters(timeLimit=1.8)
+
+    result1 = solve_tsp(data, ap; verbose=false)
+
+    data["x_coordinates"] = x 
+    data["y_coordinates"] = y
+    result2 = solve_tsp(data, ap; verbose=false)
+
+    delete!(data, "distance_matrix")
+    result3 = solve_tsp(data, ap; verbose=false)
+
+    result4 = solve_tsp(data, ap; verbose=false)
+
+    @test result1.cost == result2.cost == result3.cost == result4.cost
+
+
+
+    delete!(data, "y_coordinates")
+    @test_broken solve_tsp(data; verbose=false)
+
+    delete!(data, "x_coordinates")
+    @test_broken solve_tsp(data; verbose=false)
 end

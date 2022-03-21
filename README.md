@@ -106,8 +106,25 @@ result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles
 - Using the distance matrix, with optional x, y coordinate information. The objective function is calculated based on the distance matrix, but the x, y coordinates just provide some helpful information. The distance matrix may not be consistent with the coordinates. 
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles, ap; x_coords=x, y_coords=y, verbose=true)
+result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, verbose=true)
 ```
+
+This package also supports a dictionary input as in Google OR-Tools:
+```julia
+data = Dict()
+data["distance_matrix"] = ... # Matrix
+data["demands"] = ... # Vector
+data["service_times"] ... # Vector
+data["vehicle_capacity"] = ... # Integer
+data["num_vehicles"] = ... # Integer
+data["x_coordinaes"] = ... # Vector
+data["y_coordinaes"] = ... # Vector
+
+ap = AlgorithmParameters(timeLimit=3.2) # seconds
+result = solve_cvrp(data, ap; verbose=true)
+```
+Again, you can omit either the distance matrix or the coordinates.
+
 
 ## TSP interfaces 
 
@@ -126,8 +143,23 @@ result = solve_tsp(tsp, ap; use_dist_mtx=true)
 ```julia
 result1 = solve_tsp(x, y, ap)
 result2 = solve_tsp(dist_mtx, ap)
-result3 = solve_tsp(dist_mtx, ap; x_coords=x, y_coords=y)
+result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 ```
+
+- The dictionary input:
+```julia
+This package also supports a dictionary input as in Google OR-Tools:
+```julia
+data = Dict()
+data["distance_matrix"] = ... # Matrix
+data["x_coordinaes"] = ... # Vector
+data["y_coordinaes"] = ... # Vector
+
+ap = AlgorithmParameters(timeLimit=3.2) # seconds
+result = solve_tsp(data, ap; verbose=true)
+```
+You can omit either the distance matrix or the coordinates.
+
 
 ## AlgorithmParamters
 

@@ -64,7 +64,51 @@ end
 
     result1 = solve_cvrp(x, y, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
     result2 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
-    result3 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; x_coords=x, y_coords=y, verbose=true)
+    result3 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, verbose=true)
 
     @test result1.cost == result2.cost == result3.cost
+end
+
+
+@testset "dictionary CVRP" begin
+    cvrp, _, _ = CVRPLIB.readCVRPLIB("A-n32-k5")
+    x = cvrp.coordinates[:, 1]
+    y = cvrp.coordinates[:, 2]
+    dist_mtx = cvrp.weights
+    service_time = zeros(cvrp.dimension)
+    demand = cvrp.demand
+    capacity = cvrp.capacity
+    n_vehicles = 5
+
+    data = Dict()
+    data["distance_matrix"] = dist_mtx 
+    data["demands"] = demand
+    data["vehicle_capacity"] = capacity
+    data["num_vehicles"] = n_vehicles
+
+    ap = AlgorithmParameters(timeLimit=1.8)
+
+    result1 = solve_cvrp(data, ap; verbose=false)
+
+    data["service_times"] = service_time 
+    result2 = solve_cvrp(data, ap; verbose=false)
+
+    data["x_coordinates"] = x 
+    data["y_coordinates"] = y
+    result3 = solve_cvrp(data, ap; verbose=false)
+
+    delete!(data, "distance_matrix")
+    result4 = solve_cvrp(data, ap; verbose=false)
+
+    result5 = solve_cvrp(data; verbose=false)
+
+    @test result1.cost == result2.cost == result3.cost == result4.cost == result5.cost
+
+
+
+    delete!(data, "y_coordinates")
+    @test_broken solve_cvrp(data; verbose=false)
+
+    delete!(data, "x_coordinates")
+    @test_broken solve_cvrp(data; verbose=false)
 end
