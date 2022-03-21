@@ -40,7 +40,7 @@ end
     ap = AlgorithmParameters(timeLimit=1)
     result1 = solve_tsp(x, y, ap)
     result2 = solve_tsp(dist_mtx, ap)
-    result3 = solve_tsp(dist_mtx, ap; x_coords=x, y_coords=y)
+    result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 
     @test result1.cost == result2.cost == result3.cost
 end

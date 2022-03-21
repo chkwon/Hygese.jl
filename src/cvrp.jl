@@ -35,10 +35,10 @@ end
 
 function solve_cvrp(
     dist_mtx::Matrix, service_time::Vector, demand::Vector, vehicle_capacity::Integer, n_vehicles::Integer, parameters=AlgorithmParameters(); 
-    verbose=true, x_coords=zeros(length(demand)), y_coords=zeros(length(demand))
+    verbose=true, x_coordinates=zeros(length(demand)), y_coordinates=zeros(length(demand))
 )
-    @assert length(x_coords) == length(y_coords) == length(service_time) == length(demand)
-    return c_api_solve_cvrp_dist_mtx(length(x_coords), x_coords, y_coords, Matrix(dist_mtx'), service_time, demand, vehicle_capacity, n_vehicles, parameters, verbose)
+    @assert length(x_coordinates) == length(y_coordinates) == length(service_time) == length(demand)
+    return c_api_solve_cvrp_dist_mtx(length(x_coordinates), x_coordinates, y_coordinates, Matrix(dist_mtx'), service_time, demand, vehicle_capacity, n_vehicles, parameters, verbose)
 end
 
 
@@ -84,8 +84,8 @@ function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
                 data["num_vehicles"] :: Integer, 
                 parameters; 
                 verbose=verbose,
-                x_coords = data["x_coordinates"],
-                y_coords = data["y_coordinates"]
+                x_coordinates = data["x_coordinates"],
+                y_coordinates = data["y_coordinates"]
             )
     
         else

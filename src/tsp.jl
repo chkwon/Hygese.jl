@@ -29,7 +29,7 @@ function solve_tsp(tsp::TSP, parameters=AlgorithmParameters(); verbose=true, use
 end
 
 
-function solve_tsp(dist_mtx::Matrix, parameters=AlgorithmParameters(); verbose=true, x_coords=zeros(size(dist_mtx,1)), y_coords=zeros(size(dist_mtx,1)))
+function solve_tsp(dist_mtx::Matrix, parameters=AlgorithmParameters(); verbose=true, x_coordinates=zeros(size(dist_mtx,1)), y_coordinates=zeros(size(dist_mtx,1)))
     n = size(dist_mtx, 1)
 
     serv_time = zeros(n)
@@ -45,7 +45,7 @@ function solve_tsp(dist_mtx::Matrix, parameters=AlgorithmParameters(); verbose=t
     # need to input dist_mtx' instead of dist_mtx
     # Julia: column-first indexing
     # C: row-first indexing
-    return c_api_solve_cvrp_dist_mtx(n, x_coords, y_coords, c_dist_mtx, serv_time, dem, vehicleCapacity, maximum_number_of_vehicles, parameters, verbose)
+    return c_api_solve_cvrp_dist_mtx(n, x_coordinates, y_coordinates, c_dist_mtx, serv_time, dem, vehicleCapacity, maximum_number_of_vehicles, parameters, verbose)
 end
 function solve_tsp(x::Vector, y:: Vector, parameters=AlgorithmParameters(); verbose=true)
     n = length(x)

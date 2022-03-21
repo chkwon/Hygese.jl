@@ -64,7 +64,7 @@ end
 
     result1 = solve_cvrp(x, y, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
     result2 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
-    result3 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; x_coords=x, y_coords=y, verbose=true)
+    result3 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, verbose=true)
 
     @test result1.cost == result2.cost == result3.cost
 end
