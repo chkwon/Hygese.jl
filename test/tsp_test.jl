@@ -70,4 +70,12 @@ end
     result4 = solve_tsp(data, ap; verbose=false)
 
     @test result1.cost == result2.cost == result3.cost == result4.cost
+
+
+
+    delete!(data, "y_coordinates")
+    @test_broken solve_tsp(data; verbose=false)
+
+    delete!(data, "x_coordinates")
+    @test_broken solve_tsp(data; verbose=false)
 end
