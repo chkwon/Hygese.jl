@@ -147,7 +147,6 @@ result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 ```
 
 - The dictionary input:
-```julia
 This package also supports a dictionary input as in Google OR-Tools:
 ```julia
 data = Dict()
