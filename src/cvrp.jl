@@ -39,13 +39,23 @@ function solve_cvrp(cvrp_file_path::AbstractString, parameters=AlgorithmParamete
     return solve_cvrp(cvrp, parameters; maximum_number_of_vehicles=maximum_number_of_vehicles, verbose=verbose, use_dist_mtx=true)
 end
 
-function solve_cvrp(x::Vector, y::Vector, service_time::Vector, demand::Vector, vehicle_capacity::Real, n_vehicles::Integer, parameters=AlgorithmParameters(); verbose=true)
+function solve_cvrp(
+    x::Vector, y::Vector, service_time::Vector, demand::Vector, 
+    vehicle_capacity::Real, n_vehicles::Integer, 
+    parameters=AlgorithmParameters(); 
+    verbose=true, duration_limit=Inf
+)
     @assert length(x) == length(y) == length(service_time) == length(demand)
 
     isRoundingInteger = true
-    isDurationConstraint = false
-    duration_limit = DBL_MAX
-    
+
+    if duration_limit < Inf
+        isDurationConstraint = true
+    else
+        isDurationConstraint = false
+        duration_limit = DBL_MAX 
+    end
+
     return c_api_solve_cvrp(
         length(demand), x, y, service_time, demand, 
         vehicle_capacity, duration_limit, isRoundingInteger, isDurationConstraint,
@@ -54,8 +64,11 @@ function solve_cvrp(x::Vector, y::Vector, service_time::Vector, demand::Vector, 
 end
 
 function solve_cvrp(
-    dist_mtx::Matrix, service_time::Vector, demand::Vector, vehicle_capacity::Real, n_vehicles::Integer, parameters=AlgorithmParameters(); 
-    verbose=true, x_coordinates=Float64[], y_coordinates=Float64[]
+    dist_mtx::Matrix, service_time::Vector, demand::Vector, 
+    vehicle_capacity::Real, n_vehicles::Integer, 
+    parameters=AlgorithmParameters(); 
+    verbose=true, duration_limit=Inf,
+    x_coordinates=Float64[], y_coordinates=Float64[]
 )
 
     if length(x_coordinates) == 0 && length(y_coordinates) == 0
@@ -64,11 +77,16 @@ function solve_cvrp(
         @assert length(x_coordinates) == length(y_coordinates) == length(service_time) == length(demand)
     end
     
-    isDurationConstraint = false
-    duration_limit = DBL_MAX
+    if duration_limit < Inf
+        isDurationConstraint = true
+    else
+        isDurationConstraint = false
+        duration_limit = DBL_MAX 
+    end
 
     return c_api_solve_cvrp_dist_mtx(
-        length(demand), x_coordinates, y_coordinates, Matrix(dist_mtx'), service_time, demand, vehicle_capacity, duration_limit, isDurationConstraint,
+        length(demand), x_coordinates, y_coordinates, Matrix(dist_mtx'), service_time, demand, 
+        vehicle_capacity, duration_limit, isDurationConstraint,
         n_vehicles, parameters, verbose
     )
 end
@@ -94,6 +112,7 @@ function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
 
     n = use_dist_mtx ? size(data["distance_matrix"], 1) : length(data["x_coordinates"])
     service_time = get(data, "service_times", zeros(n)) 
+    duration_limit = get(data, "duration_limit", Inf)
 
     if !use_dist_mtx
         return solve_cvrp(
@@ -104,7 +123,8 @@ function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
             data["vehicle_capacity"] :: Integer, 
             data["num_vehicles"] :: Integer, 
             parameters; 
-            verbose=verbose
+            verbose = verbose, 
+            duration_limit = duration_limit
         )
     else 
         if has_coordinates 
@@ -117,7 +137,8 @@ function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
                 parameters; 
                 verbose=verbose,
                 x_coordinates = data["x_coordinates"],
-                y_coordinates = data["y_coordinates"]
+                y_coordinates = data["y_coordinates"],
+                duration_limit = duration_limit
             )
     
         else
@@ -128,7 +149,8 @@ function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
                 data["vehicle_capacity"] :: Integer, 
                 data["num_vehicles"] :: Integer, 
                 parameters; 
-                verbose=verbose
+                verbose = verbose,
+                duration_limit = duration_limit
             )
         end    
     end
