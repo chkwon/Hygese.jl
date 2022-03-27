@@ -9,6 +9,10 @@ function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number
     dem = cvrp.demand
     vehicleCapacity = cvrp.capacity
 
+    isRoundingInteger = true
+    isDurationConstraint = false
+    duration_limit = DBL_MAX
+
     if use_dist_mtx
         dist_mtx = zeros(n, n)
         for i in 1:n, j in 1:n
@@ -17,9 +21,16 @@ function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number
         # need to input dist_mtx' instead of dist_mtx
         # Julia: column-first indexing
         # C: row-first indexing
-        return c_api_solve_cvrp_dist_mtx(n, x, y, Matrix(dist_mtx'), serv_time, dem, vehicleCapacity, maximum_number_of_vehicles, parameters, verbose)
+        return c_api_solve_cvrp_dist_mtx(
+            n, x, y, Matrix(dist_mtx'), serv_time, dem, 
+            vehicleCapacity, duration_limit, isDurationConstraint, 
+            maximum_number_of_vehicles, parameters, verbose
+        )
     else
-        return c_api_solve_cvrp(n, x, y, serv_time, dem, vehicleCapacity, maximum_number_of_vehicles, parameters, verbose)
+        return c_api_solve_cvrp(
+            n, x, y, serv_time, dem, 
+            vehicleCapacity, duration_limit, isRoundingInteger, isDurationConstraint,
+            maximum_number_of_vehicles, parameters, verbose)
     end
 end
 
@@ -28,17 +39,38 @@ function solve_cvrp(cvrp_file_path::AbstractString, parameters=AlgorithmParamete
     return solve_cvrp(cvrp, parameters; maximum_number_of_vehicles=maximum_number_of_vehicles, verbose=verbose, use_dist_mtx=true)
 end
 
-function solve_cvrp(x::Vector, y::Vector, service_time::Vector, demand::Vector, vehicle_capacity::Integer, n_vehicles::Integer, parameters=AlgorithmParameters(); verbose=true)
+function solve_cvrp(x::Vector, y::Vector, service_time::Vector, demand::Vector, vehicle_capacity::Real, n_vehicles::Integer, parameters=AlgorithmParameters(); verbose=true)
     @assert length(x) == length(y) == length(service_time) == length(demand)
-    return c_api_solve_cvrp(length(x), x, y, service_time, demand, vehicle_capacity, n_vehicles, parameters, verbose)
+
+    isRoundingInteger = true
+    isDurationConstraint = false
+    duration_limit = DBL_MAX
+    
+    return c_api_solve_cvrp(
+        length(demand), x, y, service_time, demand, 
+        vehicle_capacity, duration_limit, isRoundingInteger, isDurationConstraint,
+        n_vehicles, parameters, verbose
+    )
 end
 
 function solve_cvrp(
-    dist_mtx::Matrix, service_time::Vector, demand::Vector, vehicle_capacity::Integer, n_vehicles::Integer, parameters=AlgorithmParameters(); 
-    verbose=true, x_coordinates=zeros(length(demand)), y_coordinates=zeros(length(demand))
+    dist_mtx::Matrix, service_time::Vector, demand::Vector, vehicle_capacity::Real, n_vehicles::Integer, parameters=AlgorithmParameters(); 
+    verbose=true, x_coordinates=Float64[], y_coordinates=Float64[]
 )
-    @assert length(x_coordinates) == length(y_coordinates) == length(service_time) == length(demand)
-    return c_api_solve_cvrp_dist_mtx(length(x_coordinates), x_coordinates, y_coordinates, Matrix(dist_mtx'), service_time, demand, vehicle_capacity, n_vehicles, parameters, verbose)
+
+    if length(x_coordinates) == 0 && length(y_coordinates) == 0
+        @assert length(service_time) == length(demand)
+    else
+        @assert length(x_coordinates) == length(y_coordinates) == length(service_time) == length(demand)
+    end
+    
+    isDurationConstraint = false
+    duration_limit = DBL_MAX
+
+    return c_api_solve_cvrp_dist_mtx(
+        length(demand), x_coordinates, y_coordinates, Matrix(dist_mtx'), service_time, demand, vehicle_capacity, duration_limit, isDurationConstraint,
+        n_vehicles, parameters, verbose
+    )
 end
 
 

@@ -1,7 +1,10 @@
 
 
-const version = "0.1.0"
-const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v$(version).tar.gz"
+const version = "01bf9f0d6f56d65ab8d36c931043f2a3027fb3b7"
+const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/$(version).tar.gz"
+
+# const version = "0.1.0"
+# const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v$(version).tar.gz"
 
 const HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
 
@@ -14,7 +17,7 @@ function build_HGS()
     mkdir("build")
     cd("build")
     run(`cmake -DCMAKE_BUILD_TYPE=Release ../`)
-    run(`make hgscvrp`)
+    run(`make lib`)
 
     return joinpath(@__DIR__, SRC_DIR, "build", "libhgscvrp")
 end

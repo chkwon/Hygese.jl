@@ -6,6 +6,7 @@ include("c_api.jl")
 include("cvrp.jl")
 include("tsp.jl")
 
+const DBL_MAX = floatmax(Cdouble)
 
 function reporting(visited_customers)
     routes = deepcopy(visited_customers)
