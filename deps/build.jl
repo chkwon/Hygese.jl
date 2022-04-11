@@ -18,7 +18,7 @@ function build_HGS()
     cd(SRC_DIR)
     mkdir("build")
     cd("build")
-    run(`cmake -DCMAKE_BUILD_TYPE=Release ../`)
+    run(`cmake .. -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"`)
     run(`make lib`)
 
     return joinpath(@__DIR__, SRC_DIR, "build", "libhgscvrp")
