@@ -20,7 +20,8 @@ Use:
 ```julia
 using Hygese
 ap = AlgorithmParameters(timeLimit=1.3, seedRNG=3) # timeLimit in seconds, seedRNG is the seed for random values.
-result = solve_cvrp(<path_to_vrp_file>, ap; verbose=true) # verbose=false to turn off all outputs
+cvrp = CVRPLIB.readCVRP(<path to .vrp file>)
+result = solve_cvrp(cvrp, ap; verbose=true) # verbose=false to turn off all outputs
 ```
 - `result.cost` = the total cost of routes
 - `result.time` = the computational time taken by HGS
@@ -61,8 +62,7 @@ This package returns `visited_customers` with the original node numbering.
 For the above example, 
 ```julia 
 using Hygese, CVRPLIB
-inst_name = "P-n19-k2"
-cvrp, cvrp_file, cvrp_sol_file = CVRPLIB.readCVRP(inst_name)
+cvrp, cvrp_file, cvrp_sol_file = CVRPLIB.readCVRPLIB("P-n19-k2")
 result = solve_cvrp(cvrp)
 ```
 returns 
@@ -87,43 +87,29 @@ In all data the first element is for the depot.
 - `x` = x coordinates of nodes, size of `n`
 - `y` = x coordinates of nodes, size of `n`
 - `dist_mtx` = the distance matrix, size of `n` by `n`.
-- `service_time` = service time in each node 
-- `demand` = the demand in each node
+- `service_times` = service time in each node 
+- `demands` = the demand in each node
 - `vehicle_capacity` = the capacity of the vehicles
+- `duration_limit` = the duration limit for each vehicle
 - `n_vehicles` = the maximum number of available vehicles
 
 Three possibilities:
 - Only by the x, y coordinates. The Euclidean distances are used. 
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(x, y, service_time, demand, vehicle_capacity, n_vehicles, ap; verbose=true)
+result = solve_cvrp(x, y, demands, vehicle_capacity, n_vehicles, ap; service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 - Only by the distance matrix.
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles, ap; verbose=true)
+result = solve_cvrp(dist_mtx, demand, vehicle_capacity, n_vehicles, ap; service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 - Using the distance matrix, with optional x, y coordinate information. The objective function is calculated based on the distance matrix, but the x, y coordinates just provide some helpful information. The distance matrix may not be consistent with the coordinates. 
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(dist_mtx, service_time, demand, vehicle_capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, verbose=true)
+result = solve_cvrp(dist_mtx, demand, vehicle_capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 
-This package also supports a dictionary input as in Google OR-Tools:
-```julia
-data = Dict()
-data["distance_matrix"] = ... # Matrix
-data["demands"] = ... # Vector
-data["service_times"] ... # Vector
-data["vehicle_capacity"] = ... # Integer
-data["num_vehicles"] = ... # Integer
-data["x_coordinaes"] = ... # Vector
-data["y_coordinaes"] = ... # Vector
-
-ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(data, ap; verbose=true)
-```
-Again, you can omit either the distance matrix or the coordinates.
 
 
 ## TSP interfaces 
@@ -146,19 +132,6 @@ result2 = solve_tsp(dist_mtx, ap)
 result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 ```
 
-- The dictionary input:
-This package also supports a dictionary input as in Google OR-Tools:
-```julia
-data = Dict()
-data["distance_matrix"] = ... # Matrix
-data["x_coordinaes"] = ... # Vector
-data["y_coordinaes"] = ... # Vector
-
-ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_tsp(data, ap; verbose=true)
-```
-You can omit either the distance matrix or the coordinates.
-
 
 ## AlgorithmParamters
 
@@ -171,15 +144,14 @@ Base.@kwdef mutable struct AlgorithmParameters
     nbElite :: Cint = 4
     nbClose :: Cint = 5
     targetFeasible :: Cdouble = 0.2
-    penaltyIncrease :: Cdouble = 1.20
-    penaltyDecrease :: Cdouble = 0.85
-    repairProb :: Cdouble = 0.5
-    seedRNG :: Cint = 0
+    seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = Cdouble(typemax(Cint))
+    timeLimit :: Cdouble = C_DBL_MAX 
     isRoundingInteger :: Cchar = 1
+    useSwapStar :: Cchar = 1
 end
 ```
+where `const C_DBL_MAX = floatmax(Cdouble)`.
 
 ## Related Packages
 - [CVRPLIB.jl](https://github.com/chkwon/CVRPLIB.jl)
@@ -188,4 +160,4 @@ end
 - [Concorde.jl](https://github.com/chkwon/Concorde.jl)
 
 
-- [hygese](https://github.com/chkwon/hygese): A Python wrapper for HGS-CVRP
+- [PyHygese](https://github.com/chkwon/PyHygese): A Python wrapper for HGS-CVRP

@@ -6,13 +6,11 @@ Base.@kwdef mutable struct AlgorithmParameters
     nbElite :: Cint = 4
     nbClose :: Cint = 5
     targetFeasible :: Cdouble = 0.2
-    penaltyIncrease :: Cdouble = 1.20
-    penaltyDecrease :: Cdouble = 0.85
-    repairProb :: Cdouble = 0.5
-    seedRNG :: Cint = 0
+    seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = Cdouble(typemax(Cint))
+    timeLimit :: Cdouble = C_DBL_MAX
     isRoundingInteger :: Cchar = 1
+    useSwapStar :: Cchar = 1
 end
 
 mutable struct C_SolutionRoute
@@ -61,12 +59,15 @@ end
 """
     function c_api_solve_cvrp(
         n::Integer,
-        x::Vector{Cdouble},
-        y::Vector{Cdouble},
-        service_time::Vector{Cdouble},
-        demand::Vector{Cdouble},
-        vehicle_capacity::Integer,
-        maximum_number_of_vehicles::Integer,
+        x::Vector,
+        y::Vector,
+        service_time::Vector,
+        demand::Vector,
+        vehicle_capacity::Float64,
+        duration_limit::Float64,
+        isRoundingInteger::Bool,
+        isDurationConstraint::Bool,
+        n_vehicles::Integer,
         parameters::AlgorithmParameters,
         verbose::Bool
     )
@@ -84,20 +85,29 @@ function c_api_solve_cvrp(
     y::Vector,
     service_time::Vector,
     demand::Vector,
-    vehicle_capacity::Integer,
-    maximum_number_of_vehicles::Integer,
+    vehicle_capacity::Real,
+    duration_limit::Real,
+    isRoundingInteger::Bool,
+    isDurationConstraint::Bool,
+    n_vehicles::Integer,
     parameters::AlgorithmParameters,
     verbose::Bool
 )
+
+    @assert service_time[1] == 0.0
+    @assert demand[1] == 0.0
+
     c_solution_ptr = ccall(
         (:solve_cvrp, LIBHGSCVRP),
         Ptr{C_Solution},
         (
             Cint, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble},
-            Cint, Cint, Ptr{AlgorithmParameters}, Cchar
+            Cdouble, Cdouble, Cchar, Cchar,
+            Cint, Ptr{AlgorithmParameters}, Cchar
         ),
         n, Cdouble.(x), Cdouble.(y), Cdouble.(service_time), Cdouble.(demand),
-        vehicle_capacity, maximum_number_of_vehicles, Ref(parameters), verbose
+        vehicle_capacity, duration_limit, isRoundingInteger, isDurationConstraint,
+        n_vehicles, Ref(parameters), verbose
     )
 
     return convert_destroy(c_solution_ptr)
@@ -110,20 +120,35 @@ function c_api_solve_cvrp_dist_mtx(
     dist_mtx::Matrix, # row-first matrix as in C
     service_time::Vector,
     demand::Vector,
-    vehicle_capacity::Integer,
-    maximum_number_of_vehicles::Integer,
+    vehicle_capacity::Real,
+    duration_limit::Real,
+    isDurationConstraint::Bool,
+    n_vehicles::Integer,
     parameters::AlgorithmParameters,
     verbose::Bool
 )
+
+    @assert service_time[1] == 0.0
+    @assert demand[1] == 0.0
+
+    if length(x) == length(y) == n 
+        x_ptr = Cdouble.(x)
+        y_ptr = Cdouble.(y)
+    else 
+        x_ptr = y_ptr = C_NULL
+    end
+
     c_solution_ptr = ccall(
         (:solve_cvrp_dist_mtx, LIBHGSCVRP),
         Ptr{C_Solution},
         (
             Cint, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble},
-            Cint, Cint, Ptr{AlgorithmParameters}, Cchar
+            Cdouble, Cdouble, Cchar,
+            Cint, Ptr{AlgorithmParameters}, Cchar
         ),
-        n, Cdouble.(x), Cdouble.(y), Cdouble.(dist_mtx), Cdouble.(service_time), Cdouble.(demand),
-        vehicle_capacity, maximum_number_of_vehicles, Ref(parameters), verbose
+        n, x_ptr, y_ptr, Cdouble.(dist_mtx), Cdouble.(service_time), Cdouble.(demand),
+        vehicle_capacity, duration_limit, isDurationConstraint,
+        n_vehicles, Ref(parameters), verbose
     )
 
     return convert_destroy(c_solution_ptr)

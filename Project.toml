@@ -11,7 +11,7 @@ TSPLIB = "b1c258e7-59ae-4b06-a547-f10871db1548"
 [compat]
 BinDeps = "1"
 TSPLIB = "0.1"
-CVRPLIB = "0.2"
+CVRPLIB = "0.3"
 julia = "1"
 
 [extras]
