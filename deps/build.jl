@@ -1,6 +1,6 @@
 
 
-const version = "01bf9f0d6f56d65ab8d36c931043f2a3027fb3b7"
+const version = "74bf109abd3c7998e46a805b4661969985a2b371"
 const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/$(version).tar.gz"
 
 # const version = "0.1.0"
@@ -13,6 +13,8 @@ const SRC_DIR = "HGS-CVRP-$version"
 import BinDeps
 
 function build_HGS()
+    download_HGS()
+
     cd(SRC_DIR)
     mkdir("build")
     cd("build")
@@ -43,12 +45,12 @@ end
 function install_HGS()
     lib = get(ENV, "HGS_CVRP_SHARED_LIBRARY", nothing)
     if !haskey(ENV, "HGS_CVRP_SHARED_LIBRARY")
-        if Sys.iswindows()
-            lib = download_HGS_LIB_WIN()
-        else
-            download_HGS()
-            lib = build_HGS()
-        end
+        # if Sys.iswindows()
+        #     lib = download_HGS_LIB_WIN()
+        # else
+        #     lib = build_HGS()
+        # end
+        lib = build_HGS()
         ENV["HGS_CVRP_SHARED_LIBRARY"] = lib
     end
 
