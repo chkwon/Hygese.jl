@@ -8,7 +8,7 @@ Base.@kwdef mutable struct AlgorithmParameters
     targetFeasible :: Cdouble = 0.2
     seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = DBL_MAX
+    timeLimit :: Cdouble = C_DBL_MAX
     isRoundingInteger :: Cchar = 1
     useSwapStar :: Cchar = 1
 end
@@ -67,7 +67,7 @@ end
         duration_limit::Float64,
         isRoundingInteger::Bool,
         isDurationConstraint::Bool,
-        maximum_number_of_vehicles::Integer,
+        n_vehicles::Integer,
         parameters::AlgorithmParameters,
         verbose::Bool
     )
@@ -89,7 +89,7 @@ function c_api_solve_cvrp(
     duration_limit::Real,
     isRoundingInteger::Bool,
     isDurationConstraint::Bool,
-    maximum_number_of_vehicles::Integer,
+    n_vehicles::Integer,
     parameters::AlgorithmParameters,
     verbose::Bool
 )
@@ -107,7 +107,7 @@ function c_api_solve_cvrp(
         ),
         n, Cdouble.(x), Cdouble.(y), Cdouble.(service_time), Cdouble.(demand),
         vehicle_capacity, duration_limit, isRoundingInteger, isDurationConstraint,
-        maximum_number_of_vehicles, Ref(parameters), verbose
+        n_vehicles, Ref(parameters), verbose
     )
 
     return convert_destroy(c_solution_ptr)
@@ -123,7 +123,7 @@ function c_api_solve_cvrp_dist_mtx(
     vehicle_capacity::Real,
     duration_limit::Real,
     isDurationConstraint::Bool,
-    maximum_number_of_vehicles::Integer,
+    n_vehicles::Integer,
     parameters::AlgorithmParameters,
     verbose::Bool
 )
@@ -148,7 +148,7 @@ function c_api_solve_cvrp_dist_mtx(
         ),
         n, x_ptr, y_ptr, Cdouble.(dist_mtx), Cdouble.(service_time), Cdouble.(demand),
         vehicle_capacity, duration_limit, isDurationConstraint,
-        maximum_number_of_vehicles, Ref(parameters), verbose
+        n_vehicles, Ref(parameters), verbose
     )
 
     return convert_destroy(c_solution_ptr)

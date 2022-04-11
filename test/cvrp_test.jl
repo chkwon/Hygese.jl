@@ -6,21 +6,20 @@
     @test result.cost ≈ 555.43 atol=1e-2
 
     cvrp, _, _ = CVRPLIB.readCVRPLIB("CMT7")
-    service_time = cvrp.service_time .* ones(cvrp.dimension)
-    service_time[1] = 0.0
+    service_times = cvrp.service_time .* ones(cvrp.dimension)
+    service_times[1] = 0.0
     ap = AlgorithmParameters(timeLimit=3)
 
     result = solve_cvrp(
         cvrp.coordinates[:, 1],
         cvrp.coordinates[:, 2],
-        service_time,
         cvrp.demand,
         cvrp.capacity,
-        typemax(Cint),
-        ap,
-        verbose=true,
+        ap;
+        verbose = true,
+        round = false,
         duration_limit = cvrp.distance,
-        round=false
+        service_times = service_times
     )
     @show result.cost    
     @test result.cost ≈ 909.68 atol=1e-2
@@ -80,16 +79,16 @@ end
     x = cvrp.coordinates[:, 1]
     y = cvrp.coordinates[:, 2]
     dist_mtx = cvrp.weights
-    service_time = zeros(cvrp.dimension)
     demand = cvrp.demand
     capacity = cvrp.capacity
     n_vehicles = 5
 
     ap = AlgorithmParameters(timeLimit=1.8)
 
-    result1 = solve_cvrp(x, y, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
-    result2 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; verbose=true)
-    result3 = solve_cvrp(dist_mtx, service_time, demand, cvrp.capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, verbose=true)
+    result1 = solve_cvrp(x, y, demand, cvrp.capacity, ap; 
+                            n_vehicles=n_vehicles, verbose=true)
+    result2 = solve_cvrp(dist_mtx, demand, cvrp.capacity, ap; verbose=true)
+    result3 = solve_cvrp(dist_mtx, demand, cvrp.capacity, ap; x_coordinates=x, y_coordinates=y, verbose=true, n_vehicles=n_vehicles)
 
     @test result1.cost == result2.cost == result3.cost
 end
