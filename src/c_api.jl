@@ -93,6 +93,10 @@ function c_api_solve_cvrp(
     parameters::AlgorithmParameters,
     verbose::Bool
 )
+
+    @assert service_time[1] == 0.0
+    @assert demand[1] == 0.0
+
     c_solution_ptr = ccall(
         (:solve_cvrp, LIBHGSCVRP),
         Ptr{C_Solution},
@@ -123,6 +127,9 @@ function c_api_solve_cvrp_dist_mtx(
     parameters::AlgorithmParameters,
     verbose::Bool
 )
+
+    @assert service_time[1] == 0.0
+    @assert demand[1] == 0.0
 
     if length(x) == length(y) == n 
         x_ptr = Cdouble.(x)
