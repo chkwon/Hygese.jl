@@ -18,8 +18,8 @@ Install:
 
 Use:
 ```julia
-using Hygese
-ap = AlgorithmParameters(timeLimit=1.3, seedRNG=3) # timeLimit in seconds, seedRNG is the seed for random values.
+using Hygese, CVRPLIB
+ap = AlgorithmParameters(timeLimit=1.3, seed=3) # `timeLimit` in seconds, `seed` is the seed for random values.
 cvrp = CVRPLIB.readCVRP(<path to .vrp file>)
 result = solve_cvrp(cvrp, ap; verbose=true) # verbose=false to turn off all outputs
 ```
