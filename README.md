@@ -20,7 +20,8 @@ Use:
 ```julia
 using Hygese
 ap = AlgorithmParameters(timeLimit=1.3, seedRNG=3) # timeLimit in seconds, seedRNG is the seed for random values.
-result = solve_cvrp(<path_to_vrp_file>, ap; verbose=true) # verbose=false to turn off all outputs
+cvrp = CVRPLIB.readCVRP(<path to .vrp file>)
+result = solve_cvrp(cvrp, ap; verbose=true) # verbose=false to turn off all outputs
 ```
 - `result.cost` = the total cost of routes
 - `result.time` = the computational time taken by HGS
@@ -61,8 +62,7 @@ This package returns `visited_customers` with the original node numbering.
 For the above example, 
 ```julia 
 using Hygese, CVRPLIB
-inst_name = "P-n19-k2"
-cvrp, cvrp_file, cvrp_sol_file = CVRPLIB.readCVRP(inst_name)
+cvrp, cvrp_file, cvrp_sol_file = CVRPLIB.readCVRPLIB("P-n19-k2")
 result = solve_cvrp(cvrp)
 ```
 returns 
@@ -131,19 +131,6 @@ result2 = solve_tsp(dist_mtx, ap)
 result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 ```
 
-<!-- - The dictionary input:
-This package also supports a dictionary input as in Google OR-Tools:
-```julia
-data = Dict()
-data["distance_matrix"] = ... # Matrix
-data["x_coordinaes"] = ... # Vector
-data["y_coordinaes"] = ... # Vector
-
-ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_tsp(data, ap; verbose=true)
-```
-You can omit either the distance matrix or the coordinates. -->
-
 
 ## AlgorithmParamters
 
@@ -156,15 +143,14 @@ Base.@kwdef mutable struct AlgorithmParameters
     nbElite :: Cint = 4
     nbClose :: Cint = 5
     targetFeasible :: Cdouble = 0.2
-    penaltyIncrease :: Cdouble = 1.20
-    penaltyDecrease :: Cdouble = 0.85
-    repairProb :: Cdouble = 0.5
-    seedRNG :: Cint = 0
+    seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = Cdouble(typemax(Cint))
+    timeLimit :: Cdouble = DBL_MAX 
     isRoundingInteger :: Cchar = 1
+    useSwapStar :: Cchar = 1
 end
 ```
+where `const DBL_MAX = floatmax(Cdouble)`.
 
 ## Related Packages
 - [CVRPLIB.jl](https://github.com/chkwon/CVRPLIB.jl)

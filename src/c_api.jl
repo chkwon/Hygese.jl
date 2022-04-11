@@ -8,7 +8,7 @@ Base.@kwdef mutable struct AlgorithmParameters
     targetFeasible :: Cdouble = 0.2
     seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = Cdouble(typemax(Cint))
+    timeLimit :: Cdouble = DBL_MAX
     isRoundingInteger :: Cchar = 1
     useSwapStar :: Cchar = 1
 end
