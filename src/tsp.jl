@@ -1,15 +1,12 @@
 
-function solve_tsp(tsp_file_path::AbstractString, parameters=AlgorithmParameters(); verbose=true)
-    tsp = TSPLIB.readTSP(tsp_file_path)
-    return solve_tsp(tsp, parameters; verbose=verbose, use_dist_mtx=true)
-end
-
 function solve_tsp(tsp::TSP, parameters=AlgorithmParameters(); verbose=true, use_dist_mtx=false)
     n = tsp.dimension
     x = tsp.nodes[:, 1]
     y = tsp.nodes[:, 2]
     serv_time = zeros(size(x))
     dem = ones(size(x))
+    dem[1] = 0.0
+
     vehicleCapacity = n
     maximum_number_of_vehicles = 1
     
@@ -44,6 +41,8 @@ function solve_tsp(dist_mtx::Matrix, parameters=AlgorithmParameters(); verbose=t
 
     serv_time = zeros(n)
     dem = ones(n)
+    dem[1] = 0.0
+
     vehicleCapacity = n
     maximum_number_of_vehicles = 1
     
@@ -68,6 +67,7 @@ function solve_tsp(x::Vector, y:: Vector, parameters=AlgorithmParameters(); verb
     n = length(x)
     serv_time = zeros(n)
     dem = ones(n)
+    dem[1] = 0.0
     vehicleCapacity = n
     maximum_number_of_vehicles = 1
     

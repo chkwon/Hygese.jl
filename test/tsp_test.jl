@@ -25,12 +25,6 @@ end
     @test result.cost <= 1839 * 1.02
 end
 
-@testset "File Read TSP:" begin
-    ap = AlgorithmParameters(timeLimit=1.3)
-    result = solve_tsp("ftv64.atsp", ap)
-    @test result.cost <= 1839 * 1.02
-end
-
 @testset "x, y, dist_mtx TSP" begin
     tsp = TSPLIB.readTSPLIB(:pr76)
     dist_mtx = tsp.weights
