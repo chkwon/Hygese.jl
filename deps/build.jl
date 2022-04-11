@@ -1,6 +1,6 @@
 
 
-const version = "74bf109abd3c7998e46a805b4661969985a2b371"
+const version = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
 const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/$(version).tar.gz"
 
 # const version = "0.1.0"

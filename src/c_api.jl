@@ -6,13 +6,11 @@ Base.@kwdef mutable struct AlgorithmParameters
     nbElite :: Cint = 4
     nbClose :: Cint = 5
     targetFeasible :: Cdouble = 0.2
-    penaltyIncrease :: Cdouble = 1.20
-    penaltyDecrease :: Cdouble = 0.85
-    repairProb :: Cdouble = 0.5
-    seedRNG :: Cint = 0
+    seed :: Cint = 0
     nbIter :: Cint = 20000
     timeLimit :: Cdouble = Cdouble(typemax(Cint))
     isRoundingInteger :: Cchar = 1
+    useSwapStar :: Cchar = 1
 end
 
 mutable struct C_SolutionRoute

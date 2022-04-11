@@ -1,17 +1,23 @@
 
 
 
-function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number_of_vehicles=typemax(Cint), verbose=true, use_dist_mtx=false)
+function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number_of_vehicles=typemax(Cint), verbose=true, use_dist_mtx=false, round=true)
     n = cvrp.dimension
     x = cvrp.coordinates[:, 1]
     y = cvrp.coordinates[:, 2]
-    serv_time = zeros(size(x))
     dem = cvrp.demand
     vehicleCapacity = cvrp.capacity
+    
+    if cvrp.distance < Inf 
+        isDurationConstraint = true
+        duration_limit = cvrp.distance
+    else
+        isDurationConstraint = false
+        duration_limit = DBL_MAX
+    end    
 
-    isRoundingInteger = true
-    isDurationConstraint = false
-    duration_limit = DBL_MAX
+    serv_time = ones(size(x)) .* cvrp.service_time
+    serv_time[1] = 0.0
 
     if use_dist_mtx
         dist_mtx = zeros(n, n)
@@ -19,8 +25,8 @@ function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number
             dist_mtx[i, j] = cvrp.weights[i, j]
         end
         # need to input dist_mtx' instead of dist_mtx
-        # Julia: column-first indexing
-        # C: row-first indexing
+        # Julia: column-major indexing
+        # C: row-major indexing
         return c_api_solve_cvrp_dist_mtx(
             n, x, y, Matrix(dist_mtx'), serv_time, dem, 
             vehicleCapacity, duration_limit, isDurationConstraint, 
@@ -29,25 +35,19 @@ function solve_cvrp(cvrp::CVRP, parameters=AlgorithmParameters(); maximum_number
     else
         return c_api_solve_cvrp(
             n, x, y, serv_time, dem, 
-            vehicleCapacity, duration_limit, isRoundingInteger, isDurationConstraint,
+            vehicleCapacity, duration_limit, round, isDurationConstraint,
             maximum_number_of_vehicles, parameters, verbose)
     end
 end
 
-function solve_cvrp(cvrp_file_path::AbstractString, parameters=AlgorithmParameters(); maximum_number_of_vehicles=typemax(Cint), verbose=true)
-    cvrp = CVRPLIB.readCVRP(cvrp_file_path)
-    return solve_cvrp(cvrp, parameters; maximum_number_of_vehicles=maximum_number_of_vehicles, verbose=verbose, use_dist_mtx=true)
-end
 
 function solve_cvrp(
     x::Vector, y::Vector, service_time::Vector, demand::Vector, 
     vehicle_capacity::Real, n_vehicles::Integer, 
     parameters=AlgorithmParameters(); 
-    verbose=true, duration_limit=Inf
+    verbose=true, duration_limit=Inf, round=true
 )
     @assert length(x) == length(y) == length(service_time) == length(demand)
-
-    isRoundingInteger = true
 
     if duration_limit < Inf
         isDurationConstraint = true
@@ -58,7 +58,7 @@ function solve_cvrp(
 
     return c_api_solve_cvrp(
         length(demand), x, y, service_time, demand, 
-        vehicle_capacity, duration_limit, isRoundingInteger, isDurationConstraint,
+        vehicle_capacity, duration_limit, round, isDurationConstraint,
         n_vehicles, parameters, verbose
     )
 end
@@ -91,67 +91,3 @@ function solve_cvrp(
     )
 end
 
-
-# const CVRP_KEYS = Dict(
-#     "distance_matrix" => Matrix{Real},
-#     "num_vehicles" => Integer,
-#     "demands" => Vector{Real},
-#     "vehicle_capacity" => Integer,
-#     "service_times" => Vector{Real},
-#     "x_coordinates" => Vector{Real},
-#     "y_coordinates" => Vector{Real}
-# )
-
-function solve_cvrp(data::Dict, parameters=AlgorithmParameters(); verbose=true)
-    use_dist_mtx = haskey(data, "distance_matrix")
-    has_coordinates = haskey(data, "x_coordinates") && haskey(data, "y_coordinates")
-
-    if !use_dist_mtx && !has_coordinates 
-        error("Insufficient data input. Either coordinates or a distance matrix must be provided.")
-    end
-
-    n = use_dist_mtx ? size(data["distance_matrix"], 1) : length(data["x_coordinates"])
-    service_time = get(data, "service_times", zeros(n)) 
-    duration_limit = get(data, "duration_limit", Inf)
-
-    if !use_dist_mtx
-        return solve_cvrp(
-            data["x_coordinates"] :: Vector, 
-            data["y_coordinates"] :: Vector, 
-            service_time :: Vector,
-            data["demands"] :: Vector, 
-            data["vehicle_capacity"] :: Integer, 
-            data["num_vehicles"] :: Integer, 
-            parameters; 
-            verbose = verbose, 
-            duration_limit = duration_limit
-        )
-    else 
-        if has_coordinates 
-            return solve_cvrp(
-                data["distance_matrix"] :: Matrix, 
-                service_time :: Vector,
-                data["demands"] :: Vector, 
-                data["vehicle_capacity"] :: Integer, 
-                data["num_vehicles"] :: Integer, 
-                parameters; 
-                verbose=verbose,
-                x_coordinates = data["x_coordinates"],
-                y_coordinates = data["y_coordinates"],
-                duration_limit = duration_limit
-            )
-    
-        else
-            return solve_cvrp(
-                data["distance_matrix"] :: Matrix, 
-                service_time :: Vector,
-                data["demands"] :: Vector, 
-                data["vehicle_capacity"] :: Integer, 
-                data["num_vehicles"] :: Integer, 
-                parameters; 
-                verbose = verbose,
-                duration_limit = duration_limit
-            )
-        end    
-    end
-end
