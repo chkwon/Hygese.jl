@@ -7,7 +7,7 @@
 
 **A solver for the Capacitated Vehicle Routing Problem (CVRP)**
 
-This package provides a simple Julia wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP) through [a C interface](https://github.com/chkwon/HGS-CVRP).
+This package provides a simple Julia wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP).
 
 This package requires a C++ compiler and `cmake` installed on your computer.
 
