@@ -146,9 +146,8 @@ Base.@kwdef mutable struct AlgorithmParameters
     targetFeasible :: Cdouble = 0.2
     seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = C_DBL_MAX 
-    isRoundingInteger :: Cchar = 1
-    useSwapStar :: Cchar = 1
+    timeLimit :: Cdouble = 0.0 
+    useSwapStar :: Cint = 1
 end
 ```
 where `const C_DBL_MAX = floatmax(Cdouble)`.
