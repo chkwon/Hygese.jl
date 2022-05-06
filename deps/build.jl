@@ -1,14 +1,11 @@
-
-
-const version = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
-const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/$(version).tar.gz"
+const version = "57c59653cfb8143cdb95a3d087b445257f815e1f"
+const HGS_CVRP_SRC = "https://github.com/vidalt/HGS-CVRP/archive/$(version).tar.gz"
 
 # const version = "0.1.0"
 # const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v$(version).tar.gz"
 
-# const HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
+const HGS_CVRP_WIN = "https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v0.0.2%2B0/libhgscvrp.v0.0.2.x86_64-w64-mingw32-cxx11.tar.gz"
 
-const HGS_CVRP_WIN = "https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v0.0.1%2B0/libhgscvrp.v0.0.1.x86_64-w64-mingw32-cxx11.tar.gz"
 
 const SRC_DIR = "HGS-CVRP-$version"
 
