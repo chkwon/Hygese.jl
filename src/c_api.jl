@@ -1,4 +1,4 @@
-
+# Must match with AlgorithmParameters.h in HGS-CVRP: https://github.com/vidalt/HGS-CVRP
 Base.@kwdef mutable struct AlgorithmParameters
     nbGranular :: Cint = 20
     mu :: Cint = 25
@@ -8,9 +8,8 @@ Base.@kwdef mutable struct AlgorithmParameters
     targetFeasible :: Cdouble = 0.2
     seed :: Cint = 0
     nbIter :: Cint = 20000
-    timeLimit :: Cdouble = C_DBL_MAX
-    isRoundingInteger :: Cchar = 1
-    useSwapStar :: Cchar = 1
+    timeLimit :: Cdouble = 0.0
+    useSwapStar :: Cint = 1
 end
 
 mutable struct C_SolutionRoute
