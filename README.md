@@ -138,16 +138,16 @@ result3 = solve_tsp(dist_mtx, ap; x_coordinates=x, y_coordinates=y)
 The paramters for the HGS algorithm with default values are:
 ```julia
 Base.@kwdef mutable struct AlgorithmParameters
-    nbGranular :: Cint = 20
-    mu :: Cint = 25
-    lambda :: Cint = 40
-    nbElite :: Cint = 4
-    nbClose :: Cint = 5
-    targetFeasible :: Cdouble = 0.2
-    seed :: Cint = 0
-    nbIter :: Cint = 20000
-    timeLimit :: Cdouble = 0.0 
-    useSwapStar :: Cint = 1
+    nbGranular :: Int32 = 20
+    mu :: Int32 = 25
+    lambda :: Int32 = 40
+    nbElite :: Int32 = 4
+    nbClose :: Int32 = 5
+    targetFeasible :: Float64 = 0.2
+    seed :: Int32 = 0
+    nbIter :: Int32 = 20000
+    timeLimit :: Float64 = 0.0
+    useSwapStar :: Int32 = 1 # 1 = true, 0 = false
 end
 ```
 where `const C_DBL_MAX = floatmax(Cdouble)`.
