@@ -4,7 +4,7 @@ const HGS_CVRP_SRC = "https://github.com/vidalt/HGS-CVRP/archive/$(version).tar.
 # const version = "0.1.0"
 # const HGS_CVRP_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v$(version).tar.gz"
 
-const HGS_CVRP_WIN = "https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v0.0.2%2B0/libhgscvrp.v0.0.2.x86_64-w64-mingw32-cxx11.tar.gz"
+const HGS_CVRP_WIN = "https://github.com/chkwon/HGSCVRP_jll.jl/releases/download/HGSCVRP-v0.0.3%2B0/HGSCVRP.v0.0.3.x86_64-w64-mingw32-cxx11.tar.gz"
 
 
 const SRC_DIR = "HGS-CVRP-$version"
