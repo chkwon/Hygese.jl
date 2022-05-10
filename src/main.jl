@@ -1,7 +1,8 @@
 using CVRPLIB, TSPLIB 
+using HGSCVRP_jll
 
-# Write your package code here.
-include("../deps/deps.jl") # const LIBHGSCVRP
+const LIBHGSCVRP = HGSCVRP_jll.get_libhgscvrp_path()
+
 include("c_api.jl")
 include("cvrp.jl")
 include("tsp.jl")
