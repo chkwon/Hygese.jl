@@ -148,7 +148,7 @@ Base.@kwdef mutable struct AlgorithmParameters
     useSwapStar :: Int32 = 1 # 1 = true, 0 = false
 end
 ```
-where `const C_DBL_MAX = floatmax(Cdouble)`.
+
 
 ## Related Packages
 - [CVRPLIB.jl](https://github.com/chkwon/CVRPLIB.jl)
