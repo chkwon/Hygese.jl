@@ -1,26 +1,26 @@
-@testset "Symmetric TSP: pr76, by coordinates" begin 
+@testset "Symmetric TSP: pr76, by coordinates" begin
     tsp = TSPLIB.readTSPLIB(:pr76)
     ap = AlgorithmParameters(timeLimit=1)
     result = solve_tsp(tsp, ap)
-    @show result.cost 
+    @show result.cost
     @show result.routes
     @test result.cost <= 108159 * 1.02
 end
 
-@testset "Asymmetric TSP: br17, by dist_mtx" begin 
+@testset "Asymmetric TSP: br17, by dist_mtx" begin
     tsp = TSPLIB.readTSP("br17.atsp")
     ap = AlgorithmParameters(timeLimit=1)
     result = solve_tsp(tsp, ap; use_dist_mtx=true)
-    @show result.cost 
+    @show result.cost
     @show result.routes
     @test result.cost <= 39 * 1.02
 end
 
-@testset "Asymmetric TSP: ftv64, by dist_mtx" begin 
+@testset "Asymmetric TSP: ftv64, by dist_mtx" begin
     tsp = TSPLIB.readTSP("ftv64.atsp")
     ap = AlgorithmParameters(timeLimit=1)
     result = solve_tsp(tsp, ap; use_dist_mtx=true)
-    @show result.cost 
+    @show result.cost
     @show result.routes
     @test result.cost <= 1839 * 1.02
 end

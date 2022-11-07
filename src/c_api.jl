@@ -4,34 +4,34 @@
 
 # Must match with AlgorithmParameters.h in HGS-CVRP: https://github.com/vidalt/HGS-CVRP
 Base.@kwdef mutable struct AlgorithmParameters
-    nbGranular :: Int32 = 20
-    mu :: Int32 = 25
-    lambda :: Int32 = 40
-    nbElite :: Int32 = 4
-    nbClose :: Int32 = 5
-    targetFeasible :: Float64 = 0.2
-    seed :: Int32 = 0
-    nbIter :: Int32 = 20000
-    timeLimit :: Float64 = 0.0
-    useSwapStar :: Int32 = 1 # 1 = true, 0 = false
+    nbGranular::Int32 = 20
+    mu::Int32 = 25
+    lambda::Int32 = 40
+    nbElite::Int32 = 4
+    nbClose::Int32 = 5
+    targetFeasible::Float64 = 0.2
+    seed::Int32 = 0
+    nbIter::Int32 = 20000
+    timeLimit::Float64 = 0.0
+    useSwapStar::Int32 = 1 # 1 = true, 0 = false
 end
 
 mutable struct C_SolutionRoute
-    length :: Cint
-    path :: Ptr{Cint}
+    length::Cint
+    path::Ptr{Cint}
 end
 
 mutable struct C_Solution
-    cost :: Cdouble
-    time :: Cdouble
-    n_routes :: Cint
-    routes :: Ptr{C_SolutionRoute}
+    cost::Cdouble
+    time::Cdouble
+    n_routes::Cint
+    routes::Ptr{C_SolutionRoute}
 end
 
 mutable struct RoutingSolution
-    cost :: Float64
-    time :: Float64
-    routes :: Vector{Vector{Int}}
+    cost::Float64
+    time::Float64
+    routes::Vector{Vector{Int}}
 
     function RoutingSolution(sol_ptr::Ptr{C_Solution})
         sol = unsafe_load(sol_ptr)
@@ -134,10 +134,10 @@ function c_api_solve_cvrp_dist_mtx(
     @assert service_time[1] == 0.0
     @assert demand[1] == 0.0
 
-    if length(x) == length(y) == n 
+    if length(x) == length(y) == n
         x_ptr = Cdouble.(x)
         y_ptr = Cdouble.(y)
-    else 
+    else
         x_ptr = y_ptr = C_NULL
     end
 

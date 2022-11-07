@@ -28,7 +28,7 @@ function solve_tsp(tsp::TSP, parameters=AlgorithmParameters(); verbose=true, use
         )
     else
         return c_api_solve_cvrp(
-            n, x, y, serv_time, dem, 
+            n, x, y, serv_time, dem,
             vehicleCapacity, duration_limit, isRoundingInteger, isDurationConstraint, n_vehicles, parameters, verbose
         )
     end
@@ -44,38 +44,38 @@ function solve_tsp(dist_mtx::Matrix, parameters=AlgorithmParameters(); verbose=t
 
     vehicleCapacity = n
     n_vehicles = 1
-    
+
     c_dist_mtx = Matrix(dist_mtx')
     for i in 1:n
         c_dist_mtx[i, i] = 0.0
     end
 
     duration_limit = C_DBL_MAX
-    isDurationConstraint = false 
+    isDurationConstraint = false
 
     # need to input dist_mtx' instead of dist_mtx
     # Julia: column-first indexing
     # C: row-first indexing
     return c_api_solve_cvrp_dist_mtx(
-        n, x_coordinates, y_coordinates, c_dist_mtx, serv_time, dem, 
+        n, x_coordinates, y_coordinates, c_dist_mtx, serv_time, dem,
         vehicleCapacity, duration_limit, isDurationConstraint,
         n_vehicles, parameters, verbose
     )
 end
-function solve_tsp(x::Vector, y:: Vector, parameters=AlgorithmParameters(); verbose=true)
+function solve_tsp(x::Vector, y::Vector, parameters=AlgorithmParameters(); verbose=true)
     n = length(x)
     serv_time = zeros(n)
     dem = ones(n)
     dem[1] = 0.0
     vehicleCapacity = n
     n_vehicles = 1
-    
-    isRoundingInteger = true 
+
+    isRoundingInteger = true
     duration_limit = C_DBL_MAX
     isDurationConstraint = false
 
     return c_api_solve_cvrp(
-        n, x, y, serv_time, dem, 
+        n, x, y, serv_time, dem,
         vehicleCapacity, duration_limit, isRoundingInteger, isDurationConstraint,
         n_vehicles, parameters, verbose
     )

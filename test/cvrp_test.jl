@@ -3,7 +3,7 @@
     ap = AlgorithmParameters(timeLimit=3)
     result = solve_cvrp(cvrp, ap, verbose=true, use_dist_mtx=false, round=false)
     @show result.cost
-    @test result.cost ≈ 555.43 atol=1e-2
+    @test result.cost ≈ 555.43 atol = 1e-2
 
     cvrp, _, _ = CVRPLIB.readCVRPLIB("CMT7")
     service_times = cvrp.service_time .* ones(cvrp.dimension)
@@ -16,13 +16,13 @@
         cvrp.demand,
         cvrp.capacity,
         ap;
-        verbose = true,
-        round = false,
-        duration_limit = cvrp.distance,
-        service_times = service_times
+        verbose=true,
+        round=false,
+        duration_limit=cvrp.distance,
+        service_times=service_times
     )
-    @show result.cost    
-    @test result.cost ≈ 909.68 atol=1e-2
+    @show result.cost
+    @test result.cost ≈ 909.68 atol = 1e-2
 
 end
 
@@ -63,9 +63,9 @@ end
 
     report_visited_customers = reporting(visited_customers)
     for i in eachindex(report_visited_customers)
-        @test report_visited_customers[i] == visited_customers[i] .- 1 
+        @test report_visited_customers[i] == visited_customers[i] .- 1
     end
-end    
+end
 
 @testset "A-n32-k5.vrp" begin
     cvrp = CVRPLIB.readCVRP("A-n32-k5.vrp")
@@ -85,8 +85,8 @@ end
 
     ap = AlgorithmParameters(timeLimit=1.8)
 
-    result1 = solve_cvrp(x, y, demand, cvrp.capacity, ap; 
-                            n_vehicles=n_vehicles, verbose=true)
+    result1 = solve_cvrp(x, y, demand, cvrp.capacity, ap;
+        n_vehicles=n_vehicles, verbose=true)
     result2 = solve_cvrp(dist_mtx, demand, cvrp.capacity, ap; verbose=true)
     result3 = solve_cvrp(dist_mtx, demand, cvrp.capacity, ap; x_coordinates=x, y_coordinates=y, verbose=true, n_vehicles=n_vehicles)
 
