@@ -23,7 +23,7 @@ result = solve_cvrp(cvrp, ap; verbose=true) # verbose=false to turn off all outp
 ```
 - `result.cost` = the total cost of routes
 - `result.time` = the computational time taken by HGS
-- `results.routes` = the list of visited customers by each route, not including the depot (index 1). 
+- `result.routes` = the list of visited customers by each route, not including the depot (index 1). 
 In the [CVRPLIB](http://vrp.atd-lab.inf.puc-rio.br/index.php/en/) instances, the node numbering starts from `1`, and the depot is typically node `1`.  However, the solution reported in CVRPLIB uses numbering starts from `0`. 
 
 For example, [`P-n19-k2`](http://vrp.atd-lab.inf.puc-rio.br/media/com_vrp/instances/P/P-n19-k2.vrp) instance has the following nodes:
