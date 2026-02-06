@@ -95,17 +95,17 @@ Three possibilities:
 - Only by the x, y coordinates. The Euclidean distances are used. 
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(x, y, demands, vehicle_capacity, n_vehicles, ap; service_times=service_times, duration_limit=duration_limit, verbose=true)
+result = solve_cvrp(x, y, demands, vehicle_capacity, ap; n_vehicles=n_vehicles, service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 - Only by the distance matrix.
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(dist_mtx, demand, vehicle_capacity, n_vehicles, ap; service_times=service_times, duration_limit=duration_limit, verbose=true)
+result = solve_cvrp(dist_mtx, demands, vehicle_capacity, ap; n_vehicles=n_vehicles, service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 - Using the distance matrix, with optional x, y coordinate information. The objective function is calculated based on the distance matrix, but the x, y coordinates just provide some helpful information. The distance matrix may not be consistent with the coordinates. 
 ```julia
 ap = AlgorithmParameters(timeLimit=3.2) # seconds
-result = solve_cvrp(dist_mtx, demand, vehicle_capacity, n_vehicles, ap; x_coordinates=x, y_coordinates=y, service_times=service_times, duration_limit=duration_limit, verbose=true)
+result = solve_cvrp(dist_mtx, demands, vehicle_capacity, ap; x_coordinates=x, y_coordinates=y, n_vehicles=n_vehicles, service_times=service_times, duration_limit=duration_limit, verbose=true)
 ```
 
 

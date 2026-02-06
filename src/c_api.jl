@@ -99,6 +99,7 @@ function c_api_solve_cvrp(
 
     @assert service_time[1] == 0.0
     @assert demand[1] == 0.0
+    @assert sum(demand) <= vehicle_capacity*n_vehicles "Fleet size is insufficient"
 
     c_solution_ptr = ccall(
         (:solve_cvrp, LIBHGSCVRP),
